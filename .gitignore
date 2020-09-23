@@ -2,3 +2,4 @@
 *.iml
 vosk_wrap.cc
 *.so
+*.o
