@@ -1,0 +1,4 @@
+.idea
+*.iml
+vosk_wrap.cc
+*.so
