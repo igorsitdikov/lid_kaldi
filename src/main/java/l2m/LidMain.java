@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class LidMain {
     private final static String PATH_TO_WAV_SCP = "wav.scp";
-    private final static String PATH_TO_CORPUS = "/home/sitdikov/IdeaProjects/kaldi-asr/egs/lid_x/v2";
+    private final static String PATH_TO_CORPUS = "corpus";
     public static void main(String[] args) throws IOException, InterruptedException {
 
         int correct = 0;
@@ -83,6 +83,6 @@ public class LidMain {
     private static void printResults(int correct, int wrong) {
         System.out.println("Correct: " + correct);
         System.out.println("Wrong: " + wrong);
-        System.out.println("EER: " + (1.0 - (correct * 1.0 / (correct + wrong))));
+        System.out.println("Wrong %: " + (1.0 - (correct * 1.0 / (correct + wrong))));
     }
 }

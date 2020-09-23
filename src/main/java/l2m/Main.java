@@ -7,7 +7,7 @@ import java.nio.file.Files;
 public class Main {
 
     public static void main(String[] args) {
-        Model model = new Model("/home/sitdikov/language-models/en/model");
+        Model model = new Model("model");
         LidModel lidModel = new LidModel("model-lid");
         SpkModel spkModel = new SpkModel("model-spk");
         final File file = new File("common_voice_ru_22498222.wav");
