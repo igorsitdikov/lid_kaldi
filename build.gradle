@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'l2m.recognition'
+version '1.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'l2m.recognition.language.Main'
+        )
+    }
+    baseName 'lid'
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) })
+}
