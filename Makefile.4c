@@ -1,6 +1,18 @@
 KALDI_ROOT=/opt/kaldi
-VOSK_SOURCES=src/kaldi_recognizer.cc src/model.cc src/spk_model.cc src/lid_model.cc src/vosk_api.cc
-CFLAGS=-g -O2 -DFST_NO_DYNAMIC_LINKING -I../src -I$(KALDI_ROOT)/src -I$(KALDI_ROOT)/tools/openfst/include
+
+VOSK_SOURCES=native/kaldi_recognizer.cc native/lid_model.cc native/lid_api.cc
+
+CFLAGS=-g -O2 -DFST_NO_DYNAMIC_LINKING -I./native -I$(KALDI_ROOT)/src -I$(KALDI_ROOT)/tools/openfst/include
+
+ifeq ($(OS),Windows_NT)
+	TARGET := test_lid.exe
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		TARGET := test_lid
+	endif
+endif
+
 LIBS= \
 	$(KALDI_ROOT)/src/online2/kaldi-online2.a \
 	$(KALDI_ROOT)/src/decoder/kaldi-decoder.a \
@@ -23,12 +35,15 @@ LIBS= \
 	$(KALDI_ROOT)/tools/openfst/lib/libfstngram.a
 
 
-all: test_vosk_lang
+all: $(TARGET)
 
-test_vosk_lang: test_vosk_lang.o libvosk.a
+$(TARGET): test_lid.o liblid.a
 	g++ $^ -o $@ $(LIBS) -lgfortran -lpthread
 
-libvosk.a: $(VOSK_SOURCES:.cc=.o)
+test_lid_shared: test_lid.o
+	g++ $^ -Wl,--no-as-needed -o $@  -L. -lgfortran -lpthread -L/usr/local/lib -ldl -lm -L. -llid
+
+liblid.a: $(VOSK_SOURCES:.cc=.o)
 	ar rcs $@ $^
 
 %.o: %.c
@@ -38,4 +53,4 @@ libvosk.a: $(VOSK_SOURCES:.cc=.o)
 	g++ -std=c++11 $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f *.o *.a test_vosk
+	rm -f *.o *.a $(TARGET)

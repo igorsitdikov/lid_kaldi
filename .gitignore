@@ -3,3 +3,10 @@
 vosk_wrap.cc
 *.so
 *.o
+resources
+*_wrap.cc
+*.a
+target
+*.class
+*.dll
+*.lib

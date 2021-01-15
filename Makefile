@@ -1,16 +1,28 @@
 KALDI_ROOT=/opt/kaldi
 CFLAGS := -g -O2 -DPIC -fPIC -Wno-unused-function
-JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-CPPFLAGS := -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -I$(KALDI_ROOT)/src -I$(KALDI_ROOT)/tools/openfst/include -I../src
-#MKLROOT= /opt/intel/compilers_and_libraries/linux/mkl
-#ATLASLIBS = /usr/lib/x86_64-linux-gnu/libatlas.so.3 /usr/lib/x86_64-linux-gnu/libf77blas.so.3 /usr/lib/x86_64-linux-gnu/libcblas.so.3 /usr/lib/x86_64-linux-gnu/liblapack_atlas.so.3 -Wl,-rpath=/usr/lib/x86_64-linux-gnu
-ATLASLIBS := /usr/lib/libatlas.so.3 /usr/lib/libf77blas.so.3 /usr/lib/libcblas.so.3 /usr/lib/liblapack_atlas.so.3
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64
 CXX := g++
 
-BUILD_DIR = $(PWD)
-DEST_DIR = /usr/lib
+ifeq ($(OS),Windows_NT)
+	TARGET := liblid.dll
+	JAVA_OS := win32
+	ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+		OS_PATH := amd64/Windows
+	endif
+else
+    TARGET := liblid.so
+	JAVA_OS := linux
+	UNAME_S := $(shell uname -s)
+	UNAME_P := $(shell uname -p)
+	ifeq ($(UNAME_S),Linux)
+		ifeq ($(UNAME_P),x86_64)
+		    OS_PATH := amd64/Linux
+    	endif
+	endif
+endif
 
-COPY_FILES = $(DEST_DIR)/libvosk_jni_cpu.so
+CPPFLAGS := -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(JAVA_OS) -I$(KALDI_ROOT)/src -I$(KALDI_ROOT)/tools/openfst/include -I./native
+OUTPUT_PATH := src/main/resources/NATIVE/$(OS_PATH)/
 
 KALDI_LIBS = \
              ${KALDI_ROOT}/src/online2/kaldi-online2.a \
@@ -35,35 +47,37 @@ KALDI_LIBS = \
             -lm -lpthread \
             -lgfortran
 
-all: libvosk_jni_cpu.so
+all: $(TARGET) copy
 
 VOSK_SOURCES = \
-	vosk_wrap.cc \
-	src/kaldi_recognizer.cc \
-	src/kaldi_recognizer.h \
-	src/model.cc \
-	src/model.h \
-	src/spk_model.cc \
-	src/spk_model.h \
-	src/lid_model.cc \
-	src/lid_model.h \
-	src/vosk_api.cc \
-	src/vosk_api.h
+	lid_wrap.cc \
+	native/kaldi_recognizer.cc \
+	native/kaldi_recognizer.h \
+	native/lid_model.cc \
+	native/lid_model.h \
+	native/lid_api.cc \
+	native/lid_api.h
 
-copy: $(COPY_FILES)
+copy:
+	strip $(TARGET)
+	mkdir -p $(OUTPUT_PATH)
+	cp $(TARGET) $(OUTPUT_PATH)
+	chmod +x copy_dependencies.sh
+	./copy_dependencies.sh $(TARGET) $(OUTPUT_PATH)
 
-$(DEST_DIR)/%.so: $(BUILD_DIR)/%.so
-	sudo cp -f $< $@
-
-libvosk_jni_cpu.so: $(VOSK_SOURCES)
+$(TARGET): $(VOSK_SOURCES)
 	$(CXX) -shared -o $@ $(CPPFLAGS) $(CFLAGS) $(VOSK_SOURCES) $(KALDI_LIBS)
 
-vosk_wrap.cc: src/vosk_.i
-	mkdir -p src/main/java/l2m
-	swig -c++ -I./src \
-		-java -package l2m \
-		-outdir src/main/java/l2m -o $@ $<
+lid_wrap.cc: native/l2m.i
+	mkdir -p src/main/java/l2m/recognition/language
+	swig -c++ -I./native \
+		-java -package l2m.recognition.language \
+		-outdir src/main/java/l2m/recognition/language -o $@ $<
+
+mvn:
+	mvn clean package
+	mvn install:install-file -Dfile="target/lid-jni-1.0.1-jar-with-dependencies.jar" -DgroupId=l2m.asr -DartifactId=lid-jni -Dversion=1.0.1 -Dpackaging=jar -DgeneratePom=true
 
 clean:
-	$(RM) *.so *_wrap.cc *_wrap.o test/*.class
-	$(RM) -r org model-en
+	$(RM) *.so *_wrap.cc *.o *.a native/*.o *_wrap.o liblid.$(EXTENSION)
+	$(RM) -r target
