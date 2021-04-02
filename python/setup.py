@@ -52,7 +52,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/alphacep/vosk-api",
     packages=setuptools.find_packages(),
-    package_data = {'vosk': ['*.so', '*.dll', '*.dyld']},
+    package_data = {'lid': ['*.so', '*.dll', '*.dyld']},
     include_package_data=True,
     classifiers=[
         'Programming Language :: Python :: 3',
