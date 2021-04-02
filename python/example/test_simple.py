@@ -13,7 +13,6 @@ if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE
 model = Model("lid-107")
 rec = KaldiRecognizer(model, wf.getframerate())
 data = wf.readframes(-1)
-data = wf.readframes(-1)
 rec.AcceptWaveform(data)
 print(rec.Result())
 
