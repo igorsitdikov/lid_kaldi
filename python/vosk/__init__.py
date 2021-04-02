@@ -45,3 +45,6 @@ class KaldiRecognizer(object):
     def Result(self):
         return _ffi.string(_c.l2m_recognizer_lang_result(self._handle)).decode('utf-8')
 
+
+def SetLogLevel(level):
+    return _c.lid_set_log_level(level)
