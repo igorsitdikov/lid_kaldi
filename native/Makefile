@@ -10,7 +10,7 @@ HAVE_ACCELERATE=0
 EXTRA_CFLGAS?=
 EXTRA_LDFLAGS?=
 
-VOSK_SOURCES= \
+LID_SOURCES= \
 	kaldi_recognizer.cc \
 	lid_model.cc \
 	lid_api.cc
@@ -59,7 +59,7 @@ endif
 
 all: liblid.$(EXT)
 
-liblid.$(EXT): $(VOSK_SOURCES:.cc=.o)
+liblid.$(EXT): $(LID_SOURCES:.cc=.o)
 	$(CXX) --shared -s -o $@ $^ $(LIBS) -lm -latomic $(EXTRA_LDFLAGS)
 
 %.o: %.cc
