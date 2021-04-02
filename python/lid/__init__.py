@@ -1,7 +1,7 @@
 import os
 import sys
 
-from .lid_cffi import ffi as _ffi
+from .vosk_cffi import ffi as _ffi
 
 def open_dll():
     dlldir = os.path.abspath(os.path.dirname(__file__))

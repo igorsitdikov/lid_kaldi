@@ -6,14 +6,14 @@ import glob
 import platform
 
 # Figure out environment for cross-compile
-lid_source = os.getenv("LID_SOURCE", os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-system = os.environ.get('LID_PLATFORM', platform.system())
-architecture = os.environ.get('LID_ARCHITECTURE', platform.architecture()[0])
+vosk_source = os.getenv("VOSK_SOURCE", os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+system = os.environ.get('VOSK_PLATFORM', platform.system())
+architecture = os.environ.get('VOSK_ARCHITECTURE', platform.architecture()[0])
 
 # Copy precompmilled libraries
-for lib in glob.glob(os.path.join(lid_source, "native/lib*.*")):
+for lib in glob.glob(os.path.join(vosk_source, "src/lib*.*")):
     print ("Adding library", lib)
-    shutil.copy(lib, "lid")
+    shutil.copy(lib, "vosk")
 
 # Create OS-dependent, but Python-independent wheels.
 try:
@@ -43,16 +43,16 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="lid",
-    version="0.0.1",
-    author="Igor Sitdikov",
-    author_email="ihar.sitdzikau@yandex.ru",
-    description="Spoken Language Identification",
+    name="vosk",
+    version="0.3.21",
+    author="Alpha Cephei Inc",
+    author_email="contact@alphacephei.com",
+    description="Offline open source speech recognition API based on Kaldi and Vosk",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/igorsitdikov/lid_kaldi",
+    url="https://github.com/alphacep/vosk-api",
     packages=setuptools.find_packages(),
-    package_data = {'lid': ['*.so', '*.dll', '*.dyld']},
+    package_data = {'vosk': ['*.so', '*.dll', '*.dyld']},
     include_package_data=True,
     classifiers=[
         'Programming Language :: Python :: 3',
@@ -67,5 +67,5 @@ setuptools.setup(
     zip_safe=False, # Since we load so file from the filesystem, we can not run from zip file
     setup_requires=['cffi>=1.0'],
     install_requires=['cffi>=1.0'],
-    cffi_modules=['lid_builder.py:ffibuilder'],
+    cffi_modules=['vosk_builder.py:ffibuilder'],
 )
