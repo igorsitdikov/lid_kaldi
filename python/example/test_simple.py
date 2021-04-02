@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-from vosk import Model, KaldiRecognizer
+from lid import Model, KaldiRecognizer
 import sys
 import os
 import wave
-
 
 wf = wave.open(sys.argv[1], "rb")
 if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
@@ -13,7 +12,8 @@ if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE
 
 model = Model("lid-107")
 rec = KaldiRecognizer(model, wf.getframerate())
-
-rec.AcceptWaveform(data):
+data = wf.readframes(-1)
+data = wf.readframes(-1)
+rec.AcceptWaveform(data)
 print(rec.Result())
 
