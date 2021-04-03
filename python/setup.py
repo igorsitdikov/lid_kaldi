@@ -44,7 +44,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="lid",
-    version="0.0.1",
+    version="1.0.1",
     author="Igor Sitdikov",
     author_email="ihar.sitdzikau@yandex.ru",
     description="Spoken Language Identification",

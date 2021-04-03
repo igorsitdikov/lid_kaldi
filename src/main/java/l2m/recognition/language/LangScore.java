@@ -8,4 +8,8 @@ public class LangScore {
     private String language;
     private Double score;
 
+    @Override
+    public String toString() {
+        return String.format("{'language':'%s', 'score':%s}", LanguageMapper.getLanguage(language), score);
+    }
 }

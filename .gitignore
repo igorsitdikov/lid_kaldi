@@ -3,10 +3,14 @@
 vosk_wrap.cc
 *.so
 *.o
-resources
 *_wrap.cc
 *.a
 target
 *.class
 *.dll
 *.lib
+build
+.gradle
+env
+*.tar.xz
+*.whl
