@@ -11,7 +11,7 @@ pip3 install https://github.com/igorsitdikov/lid_kaldi/releases/download/latest/
 
 2. Download `lid-model.tar.xz` model from https://github.com/igorsitdikov/lid_kaldi/releases and unpack to your project folder
 ```
-wget https://github.com/igorsitdikov/lid_kaldi/releases/download/1.0.0/lid-model.tar.xz
+wget https://github.com/igorsitdikov/lid_kaldi/releases/download/1.0.1/lid-model.tar.xz
 tar -xvf lid-model.tar.xz
 ```
 3. Run example script (not required)
