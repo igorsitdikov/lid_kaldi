@@ -6,7 +6,7 @@
 
 Example:
 ```
-pip3 install https://github.com/igorsitdikov/lid_kaldi/releases/download/latest/lid-1.0.1-py3-none-linux_x86_64.whl
+pip3 install https://github.com/igorsitdikov/lid_kaldi/releases/download/1.0.1/lid-1.0.1-py3-none-linux_x86_64.whl
 ```
 
 2. Download `lid-model.tar.xz` model from https://github.com/igorsitdikov/lid_kaldi/releases and unpack to your project folder
